@@ -1,343 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xcortex</title>
-    <style>
-        html {
-    /* ⚡️ Заставляет браузер плавно прокручивать страницу к якорям */
-    scroll-behavior: smooth;
-}
-
-        body {
-            background-image: url('https://www.shatura.ru/files/image/65/86/81/lg!uqj.jpg');
-            background-size: cover;
-            background-attachment: fixed;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            padding: 18px;
-            color: rgb(251, 249, 249);
-            border: 18px;
-        }
-        #opis {
-            text-align: center;
-            color: aqua;
-            animation: wawe 10s ease-in-out infinite;
-            border-radius: 50px;
-        }
-        #smotr {
-            padding: 20px;
-            border-radius: 18px;
-            border-color: aliceblue;
-            text-align: center;
-            color: aqua;
-        }
-        #header {
-            padding: 9px;
-            text-align: center;
-            animation: wawe 10s ease-in-out infinite;
-            border-radius: 50px;
-        }
-        @keyframes wawe {
-            0% {
-                background-color: rgba(0, 0, 0, 0.245);
-                color: rgb(254, 255, 255);
-            }
-            50% {
-                background-color: rgba(255, 255, 255, 0.245);
-                color: black;
-            }
-            100% {
-                background-color: rgba(0, 0, 0, 0.245);
-                color: rgb(255, 255, 255);
-            }
-        }
-        #screen1 {
-            animation: wawe 10s ease-in-out infinite;
-            border-radius: 50px;
-            backdrop-filter: blur(2px); 
-            -webkit-backdrop-filter: blur(2px); /* Для поддержки в Safari */
-        }
-        .prof {
-            padding: 10px;
-            border-radius: 30px;
-            background-color: rgba(255, 255, 255, 0.589);
-            margin-top: 17px;
-            backdrop-filter: blur(5px); 
-            -webkit-backdrop-filter: blur(5px); /* Для поддержки в Safari */
-        }
-        .prof1 {
-            margin-right: 29px;
-            margin-left: auto;
-            margin-top: 10px;
-            padding: 20px;
-            color: black;
-        }
-        .prof2 {
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-            font-size: 20px;
-        }
-        span {
-            color: rgb(0, 0, 0);
-        }
-        button {
-            background-color: rgb(154, 154, 222);
-            border-radius: 36px;
-            padding: 8px;
-        }
-        .about-box {
-    /* 1. Делаем подложку белой, но прозрачной на 90% */
-    background: rgba(212, 212, 213, 0.65); /* Используем темный полупрозрачный слой, чтобы белый текст сиял */
+    <title>Xcortex | Intelligent Ecosystem</title>
     
-    /* 2. Магическое размытие картинки ЗА блоком (как в iOS) */
-    backdrop-filter: blur(5px); 
-    -webkit-backdrop-filter: blur(5px); /* Для поддержки в Safari */
+    <!-- Подключение шрифтов -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;900&display=swap" rel="stylesheet">
     
-    /* 3. Оформление самой карточки */
-    border: 1px solid rgba(0, 255, 204, 0.2); /* Тонкая неоновая рамка */
-    border-radius: 20px; /* Красивые скругленные углы */
-    padding: 30px; /* Отступы внутри карточки, чтобы текст не прижимался к краям */
-    
-    
-    /* 4. Тень для эффекта объема */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4); 
-    margin-top: 30px;
-}
-
-/* Стили для заголовка внутри карточки */
-.about-box h2 {
-    color: #00ffcc; /* Делаем заголовок неоновым */
-    margin-top: 0;
-    font-size: 2rem;
-}
-
-/* Стили для текста внутри карточки */
-.about-box p {
-    color: #ffffff; /* Текст будет чисто белым и контрастным */
-    font-size: 1.1rem;
-    line-height: 1.7; /* Увеличиваем расстояние между строками, чтобы глаза не уставали */
-}
-/* Закрепляем меню в правом верхнем углу */
-.burger-menu {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-/* Прячем сам квадратный чекбокс от глаз */
-.burger-checkbox {
-    display: none;
-}
-
-/* Кнопка с полосками */
-.burger-button {
-    display: block;
-    width: 40px;
-    height: 40px;
-    position: relative;
-    cursor: pointer;
-}
-
-/* Рисуем центральную полоску, а верхнюю и нижнюю сделаем через тени */
-.burger-button .lines {
-    display: block;
-    width: 30px;
-    height: 40px; /* Сетка для полосок */
-    background: #00ffcc; /* Твой неоновый цвет */
-    height: 4px;
-    position: absolute;
-    top: 18px;
-    left: 5px;
-    transition: 0.3s;
-}
-
-.burger-button .lines::before,
-.burger-button .lines::after {
-    content: '';
-    width: 30px;
-    height: 40px;
-    background: #00ffcc;
-    height: 4px;
-    position: absolute;
-    left: 0;
-    transition: 0.3s;
-}
-
-.burger-button .lines::before { top: -10px; } /* Верхняя полоска */
-.burger-button .lines::after { top: 10px; } /* Нижняя полоска */
-
-/* 🌌 Сам выпадающий список (матовое стекло в углу) */
-.menu-list {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 280px;
-    height: 100vh;
-    margin: 0;
-    padding: 100px 30px;
-    list-style: none;
-    background: rgba(15, 23, 42, 0.85); /* Тёмная матовая подложка */
-    backdrop-filter: blur(15px);
-    border-left: 1px solid rgba(0, 255, 204, 0.2);
-    
-    /* ⚠️ Сдвигаем меню вправо за экран, чтобы его не было видно */
-    transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-}
-
-.menu-list li {
-    margin-bottom: 30px;
-}
-
-.menu-list a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 1.3rem;
-    font-weight: bold;
-    transition: color 0.2s;
-}
-
-.menu-list a:hover {
-    color: #00ffcc; /* Подсветка ссылок при наведении */
-}
-
-/* ⚡️ МАГИЯ CSS: Когда чекбокс нажат, выдвигаем меню обратно на экран! */
-.burger-checkbox:checked ~ .menu-list {
-    transform: translateX(0);
-}
-
-/* Красивый бонус: превращаем три полоски в крестик (X) при нажатии! */
-.burger-checkbox:checked ~ .burger-button .lines {
-    background: transparent;
-}
-.burger-checkbox:checked ~ .burger-button .lines::before {
-    transform: rotate(45deg);
-    top: 0;
-}
-.burger-checkbox:checked ~ .burger-button .lines::after {
-    transform: rotate(-45deg);
-    top: 0;
-}
-/* Кнопка с полосками — поднимаем её на самый верхний слой */
-.burger-button {
-    display: block;
-    width: 40px;
-    height: 40px;
-    position: relative;
-    cursor: pointer;
-    
-    /* 🛡️ ВОТ ОНО — спасение! Теперь кнопка окажется ПОВЕРХ выплывшего меню */
-    z-index: 1001; 
-}
-
-/* Для сравнения: у выпадающего списка .menu-list в коде стоит z-index: 1000 */
-.menu-list {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 280px;
-    height: 100vh;
-    margin: 0;
-    padding: 100px 30px;
-    list-style: none;
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(15px);
-    border-left: 1px solid rgba(0, 255, 204, 0.2);
-    
-    /* Оставляем z-index: 1000, чтобы кнопка (1001) была выше него */
-    z-index: 1000; 
-    
-    transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-}
-
-    </style>
+    <!-- Подключение CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <nav class="burger-menu">
-    <!-- Скрытый переключатель -->
-    <input type="checkbox" id="burger-id" class="burger-checkbox">
-    
-    <!-- Иконка из трёх полосок (гамбургер) -->
-    <label for="burger-id" class="burger-button">
-        <span class="lines"></span>
-    </label>
+<body data-theme="dark">
 
-    <!-- Сам выпадающий список ссылок -->
-    <ul class="menu-list">
-        <li><a href="">Главная база</a></li>
-        <li><a href="mailto: artem.ovsyankin33@gmail.com">оставить отзыв (artem.ovsyankin33@gmail.com)</a></li>
-        <li><a href="#project1">проекты</a></li>
-        <li><a href="#about">о нас</a></li>
-    </ul>
-</nav>
-
-    <div id="screen1">
-    <div id="header">
-        <h1 style="display: block; text-align: center;">Xcortex</h1>
-        <div id="opis">
-        <p>ОЕСС снова работает!</p>
+    <!-- Служебная полоса (Top Bar) -->
+    <header class="top-bar glass-panel">
+        <div class="left-controls">
+            <button id="settings-btn" class="icon-btn" aria-label="Настройки">⚙️</button>
         </div>
-        <div id="smotr">
+        <div class="right-controls">
+            <button id="menu-btn" class="hamburger-icon" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Боковое меню навигации -->
+    <nav id="side-menu" class="glass-panel side-nav">
+        <div class="menu-header">
+            <h3>Navigate</h3>
+        </div>
+        <ul class="menu-list">
+            <li><a href="#hero" onclick="closeMenu()">Home</a></li>
+            <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+            <li><a href="#about" onclick="closeMenu()">About Xcortex</a></li>
+            <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Модальное окно настроек -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="glass-panel settings-content">
+            <div class="settings-header">
+                <h3>Interface Settings</h3>
+                <button id="close-settings-x" class="close-x">&times;</button>
+            </div>
+            
+            <div class="setting-group">
+                <label>Theme Mode:</label>
+                <select id="theme-select" class="input-field white-input">
+                    <option value="dark">Dark (Cyber)</option>
+                    <option value="light">Light (Clean)</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label>Hue Shift (Rainbow Control):</label>
+                <input type="range" id="hue-slider" min="0" max="360" value="200" class="custom-range rainbow-track">
+                <small>Adjusts the primary color spectrum.</small>
+            </div>
+
+            <div class="setting-group">
+                <label>Saturation (Vibrancy):</label>
+                <input type="range" id="saturation-slider" min="10" max="100" value="80" class="custom-range">
+                <small>Low = Pastel/Matte, High = Neon/Poisonous.</small>
+            </div>
+
+            <button id="save-settings" class="btn-primary full-width">Apply Changes</button>
+        </div>
+    </div>
+
+    <!-- Главная секция (Hero) -->
+    <section id="hero" class="hero-section">
+        <div class="logo-wrapper animate-float">
+            <div class="big-x">X</div>
+        </div>
+        <h1 class="brand-name animate-slide-up">XCORTEX</h1>
+        <p class="subtitle animate-slide-up delay-1">Intelligent Balance & Digital Ecosystem</p>
         
+        <div class="scroll-indicator animate-bounce">
+            <span>Scroll Down</span>
+            <div class="arrow-down"></div>
         </div>
-    </div>
-    </div>
-    <div style="text-align: center; padding: 40px; font-size: 24px; color: black;" id="project1">
-        наши проекты:
-    </div>
-    <div class="prof">
-        <div class="prof1">
-        <div class="prof2">
-            SCHOOL
+    </section>
+
+    <!-- Секция Проектов -->
+    <section id="projects" class="projects-section">
+        <h2 class="section-title reveal-on-scroll">My Repositories</h2>
+        <div class="grid-container">
+            <!-- Карточки проектов будут генерироваться через JS или вручную. 
+                 Для надежности оставляем статичную разметку основных, остальное можно добавить динамически, 
+                 но так как ты просил конкретный список, вот он: -->
+                 
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>Xsocial</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>Xforum</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>Security</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>reading_card</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>pay</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>Xcortex299</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>scanMethods</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>Add_name</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>worify</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>NFCmeta</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>createWeb</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>liquid</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>reklamNew</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>XcortexWIKI</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
+
+            <div class="project-card glass-panel hover-lift reveal-on-scroll">
+                <h3>physics</h3>
+                <p class="desc-placeholder">Привет, я сам заполню описание этого проекта.</p>
+                <a href="#" target="_blank" class="open-link btn-outline">Open ↗</a>
+            </div>
         </div>
-        <div>
-            иновационная платформа для подготовки к тестам по разным предметам 6 класса
+    </section>
+
+    <!-- Секция О бренде -->
+    <section id="about" class="about-section">
+        <div class="content-box glass-panel reveal-on-scroll">
+            <h2>The Philosophy of Xcortex</h2>
+            <div class="text-block">
+                <p>We calculate the intelligent balance between phases of intensive preparation and recovery as the key to efficiency.</p>
+                
+                <br>
+                
+                <strong>Module Xcortex GRADUATION:</strong> Specialized automated system for training and verification of software code. The project is in the active stage of architecture design and algorithm development. The module aims to prepare qualified technical specialists based on practical analysis of applied tasks.
+                
+                <br><br>
+                
+                <strong>Mission of Xcortex:</strong> Creating a fault-tolerant digital ecosystem that ensures a continuous cycle from basic training of young specialists to the deployment of complex automated control systems and physical system modeling.
+            </div>
         </div>
-        <a href="https://xcortex1.github.io/school/"><button>ОТКРЫТЬ</button></a>
+    </section>
+
+    <!-- Футер / Контакты -->
+    <footer id="contact" class="footer-section">
+        <div class="contact-card glass-panel reveal-on-scroll">
+            <h3>Propose an Improvement?</h3>
+            <p>Your ideas are vital for the evolution of the ecosystem.</p>
+            <a href="mailto:Artem.ovsyankin33@gmail.com?subject=Xcortex%20Feedback&body=Hello%20Artem,%0A%0AI%20would%20like%20to%20suggest%20an%20improvement:%20[Insert%20idea%20here]%0A%0AThanks!" class="btn-mailto">
+                Send Email ✉️
+            </a>
         </div>
-    </div>
-    <div class="prof">
-        <div class="prof1">
-        <div class="prof2">
-            GRADUATION
+        <div class="copyright">
+            © 2026 Xcortex Organization. All rights reserved.
         </div>
-        <div>
-            Платформа для обучения написанию кода HTML/CSS + JAVASCRIPT
-        </div>
-        <a href="https://artem-2436.github.io/code/"><button>ОТКРЫТЬ</button></a>
-        </div>
-    </div>
-    <div class="prof">
-        <div class="prof1">
-        <div class="prof2">
-            XSOCIAL
-        </div>
-        <div>
-            Социальная сеть для общения и отдыха построенная на базе supabase
-        </div>
-        <a href="https://artem-2436.github.io/Xsocial/"><button>открыть</button></a>
-        </div>
-    </div>
-    <div id="prof">
-    <div class="prof1">
-        <div class="prof2">
-            XFORUM
-        </div>
-        <div>
-            форум для общения по теме ИТ и блог
-        </div>
-        <a href="https://artem-2436.github.io/Xforum/"><button>открыть</button></a>
-        </div>
-    </div>
-</div>
-    <div class="about-box" id="about">
-        <h1><i>О НАС</i></h1>
-        <p style="font-size: 27px; border-color: blue; border-radius: 40px;">Экосистема <span>Xcortex</span> — это централизованная цифровая среда, ориентированная на разработку и внедрение инновационных решений в сфере информационных технологий, автоматизации и образования. Проект объединяет программные комплексы, распределенные веб-ресурсы и образовательные платформы под управлением Единой организации системных сайтов (ОЕСС).<br>Ключевые компоненты инфраструктуры:<br><br><span>• Платформа Xcortex School:</span> Инновационный интерактивный комплекс, разработанный для оптимизации учебного процесса учащихся. Архитектура платформы направлена на эффективное освоение академических дисциплин, интеграцию современных методик обучения и предотвращение когнитивного переутомления за счет интеллектуального баланса между фазами интенсивной подготовки и восстановления.<br><br>
-<span>• Модуль Xcortex GRADUATION:</span> Специализированная автоматизированная система обучения и верификации программного кода. Проект находится в стадии активной разработки и проектирования архитектуры алгоритмов. Модуль нацелен на подготовку квалифицированных технических специалистов на основе практического разбора прикладных задач.<br><br>
-Миссия Xcortex: Создание отказоустойчивой цифровой экосистемы, обеспечивающей непрерывный цикл от базовой подготовки молодых специалистов до развертывания сложных автоматизированных систем управления и моделирования физических систем.</p>
-    </div>
+    </footer>
+
+    <!-- Подключение JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>

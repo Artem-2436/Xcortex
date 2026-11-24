@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Xcortex — создаём сайты, которые продают</title>
+<style>
+:root{--a:#8b5cf6;--b:#06b6d4;--c:#f43f5e;--bg:#07070f;--g:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--a));--ease:cubic-bezier(.7,0,.2,1)}
+body.mono{--a:#fff;--b:#8a8a8a;--c:#cfcfcf}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:#eef;font:16px/1.6 "Segoe UI",system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
+canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bls{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bl{position:absolute;width:46vmax;height:46vmax;border-radius:50%;filter:blur(90px);opacity:.25;animation:fl 16s ease-in-out infinite alternate}
+.bl:nth-child(1){background:var(--a);top:-15%;left:-10%}
+.bl:nth-child(2){background:var(--b);bottom:-20%;right:-10%;animation-delay:-5s}
+.bl:nth-child(3){background:var(--c);top:35%;left:40%;animation-delay:-9s}
+@keyframes fl{to{transform:translate(8vw,6vh) scale(1.2)}}
+@keyframes flow{to{background-position:300% 0}}
+@keyframes up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+@keyframes bob{50%{transform:translateY(-10px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bar{to{width:100%}}
+@keyframes pulse{50%{transform:scale(1.05)}}
+.gt{background:var(--g);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 6s linear infinite}
+/* загрузка */
+#ld{position:fixed;inset:0;z-index:99;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .7s,transform .7s}
+#ld.out{opacity:0;transform:scale(1.12);pointer-events:none}
+#ld h1{font-size:clamp(44px,10vw,92px);letter-spacing:-2px;animation:pop 1s both}
+.ring{width:76px;height:76px;border-radius:50%;border:4px solid transparent;border-top-color:var(--a);border-bottom-color:var(--c);animation:spin 1s linear infinite}
+.trk{width:min(320px,70vw);height:6px;background:#ffffff1a;border-radius:9px;overflow:hidden}
+.trk i{display:block;height:100%;width:0;background:var(--g);background-size:300% 100%;animation:bar 4s linear forwards,flow 2s linear infinite}
+/* меню (по умолчанию закрыто) */
+nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;gap:6px;padding:12px 4vw;background:#07070fe6;backdrop-filter:blur(14px);border-bottom:1px solid #ffffff14;overflow-x:auto;scrollbar-width:none;transition:transform .55s var(--ease),opacity .4s}
+nav::-webkit-scrollbar{display:none}
+nav.hide{transform:translateY(-110%);opacity:0;pointer-events:none}
+nav b{font-size:24px;margin-right:auto;white-space:nowrap}
+nav a{color:#cbd;text-decoration:none;padding:8px 14px;border-radius:30px;transition:.3s;white-space:nowrap;font-size:14px}
+nav a:hover,nav a.act{background:#ffffff1c;color:#fff}
+.ib{background:none;border:1px solid #ffffff30;color:#fff;border-radius:30px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px;white-space:nowrap;transition:.3s}
+.ib:hover{background:#ffffff1c}
+#op{position:fixed;top:0;left:50%;z-index:11;transform:translate(-50%,0);border:0;cursor:pointer;color:#fff;font:600 15px/1 inherit;font-family:inherit;padding:12px 26px;border-radius:0 0 18px 18px;background:var(--g);background-size:300% 100%;animation:flow 5s linear infinite;box-shadow:0 8px 30px -8px var(--a);transition:transform .55s var(--ease) .1s}
+body.mono #op,body.mono .btn,body.mono .tag{color:#000}
+body:not(.nh) #op{transform:translate(-50%,-130%);transition-delay:0s}
+main{position:relative;z-index:1;padding:64px 5vw 60px;max-width:1200px;margin:auto;opacity:0;transition:opacity .6s,padding-top .55s var(--ease)}
+.ready main{opacity:1}
+body:not(.nh) main{padding-top:110px}
+/* секции */
+.pg{display:none}.pg.on{display:block;animation:pop .5s}
+h2{font-size:clamp(30px,5vw,54px);margin-bottom:10px;line-height:1.1}
+.sub{color:#aab;max-width:640px;margin-bottom:32px}
+.hero{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:22px}
+.hero h1{font-size:clamp(40px,8vw,92px);line-height:1.02;letter-spacing:-2px}
+.hero p{font-size:20px;color:#bbc;max-width:560px}
+.ready .hero>*{animation:up .9s both}
+.ready .hero>:nth-child(2){animation-delay:.2s}.ready .hero>:nth-child(3){animation-delay:.4s}.ready .hero>:nth-child(4){animation-delay:.6s}
+.btn{display:inline-block;border:0;cursor:pointer;color:#fff;font:600 16px/1.4 inherit;font-family:inherit;padding:14px 32px;border-radius:40px;background:var(--g);background-size:300% 100%;animation:flow 5s linear infinite;text-decoration:none;transition:transform .3s}
+.btn:hover{transform:scale(1.06)}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.card{position:relative;background:#ffffff0d;border:1px solid #ffffff1f;border-radius:22px;padding:28px;backdrop-filter:blur(12px);transition:transform .25s,border-color .3s}
+.card:hover{border-color:var(--b);transform:translateY(-4px)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-top:50px}
+.stats .card{text-align:center}.stats b{font-size:40px;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card h3{font-size:24px;margin-bottom:6px}
+.pr{font-size:44px;font-weight:800;margin:8px 0}
+.card ul{list-style:none;padding:0;margin:14px 0 22px;color:#ccd}
+.card li{padding:5px 0 5px 26px;position:relative}
+.card li:before{content:"✦";position:absolute;left:0;color:var(--b)}
+.feat{border-color:var(--a);box-shadow:0 0 40px -10px var(--a)}
+.tag{position:absolute;top:-13px;right:20px;background:var(--g);background-size:300%;animation:flow 4s linear infinite;color:#fff;font-size:13px;padding:3px 14px;border-radius:20px}
+.ic{font-size:42px;display:inline-block;animation:bob 3s ease-in-out infinite}
+.more{font-size:clamp(30px,6vw,60px);font-weight:800;text-align:center;margin-top:56px;letter-spacing:-1px;animation:flow 5s linear infinite,pulse 2.5s ease-in-out infinite}
+/* MAX */
+.mx{margin-top:60px;padding:3px;border-radius:30px;background:var(--g);background-size:300% 100%;animation:flow 5s linear infinite}
+.mx>div{background:#0b0b18f2;border-radius:27px;padding:44px 24px;text-align:center}
+.av{width:112px;height:112px;margin:0 auto 18px;animation:bob 3s ease-in-out infinite}
+.av svg{width:100%;height:100%;display:block}
+.mx h3{font-size:30px;margin-bottom:6px}
+.mx p{color:#bbc;max-width:480px;margin:0 auto 22px}
+/* поля */
+textarea,input,select{width:100%;background:#0d0d1a;color:#e8e8ff;border:1px solid #ffffff26;border-radius:14px;padding:12px 14px;font:inherit;outline:0;transition:.3s}
+textarea:focus,input:focus,select:focus{border-color:var(--b);box-shadow:0 0 0 3px #06b6d433}
+.chip{background:#ffffff14;border:1px solid #ffffff26;color:#fff;padding:8px 18px;border-radius:30px;cursor:pointer;transition:.3s;font:inherit;font-size:14px}
+.chip:hover,.chip.on{background:var(--a);border-color:var(--a)}
+body.mono .chip:hover,body.mono .chip.on{color:#000}
+/* редактор */
+.ed{display:grid;grid-template-columns:1fr 1fr;gap:16px;height:min(62vh,640px);min-height:380px;margin-top:14px}
+.ed textarea{font:14px/1.5 Consolas,monospace;resize:none;height:100%}
+.pv{display:flex;justify-content:center;overflow:auto;border-radius:14px;background:repeating-linear-gradient(45deg,#ffffff08 0 1px,transparent 1px 9px)}
+iframe{display:block;border:1px solid #ffffff26;border-radius:14px;background:#fff}
+.pv iframe{width:100%;max-width:100%;height:100%;transition:width .25s}
+/* анкета */
+form{display:grid;gap:16px;max-width:720px}
+label{display:grid;gap:6px;color:#bbc;font-size:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#ok{display:none;color:var(--b)}
+/* машина времени */
+.tm{padding:clamp(18px,4vw,34px)}
+.yr{font-size:clamp(56px,12vw,120px);font-weight:900;line-height:1;letter-spacing:-3px}
+.era{color:var(--b);font-size:14px;letter-spacing:.12em;text-transform:uppercase;margin:4px 0 8px}
+.range{appearance:none;-webkit-appearance:none;width:100%;height:8px;border-radius:20px;background:linear-gradient(90deg,var(--a),var(--b),var(--c));outline:0;margin:18px 0 6px;cursor:pointer}
+.range::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:5px solid var(--a);box-shadow:0 0 22px var(--a)}
+.range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:5px solid var(--a)}
+.tick{display:flex;justify-content:space-between;color:#85859b;font:11px monospace;margin-bottom:18px}
+#tmf{width:100%;height:min(60vh,520px);min-height:360px}
+footer{position:relative;z-index:1;text-align:center;padding:30px;color:#889;border-top:1px solid #ffffff12}
+@media(max-width:800px){.ed{grid-template-columns:1fr;height:auto}.ed textarea{height:320px}.pv{height:420px}}
+@media(max-width:600px){.two{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;scroll-behavior:auto!important}}
+</style></head><body class="nh">
+<div id="ld"><div class="ring"></div><h1 class="gt">Xcortex</h1><div class="trk"><i></i></div><span id="pc">0%</span></div>
+<div class="bls"><div class="bl"></div><div class="bl"></div><div class="bl"></div></div><canvas id="cv"></canvas>
+<nav class="hide" id="nav"><b class="gt">Xcortex</b>
+<a href="#home" data-p="home">Главная</a><a href="#services" data-p="services">Услуги</a><a href="#about" data-p="about">О нас</a><a href="#projects" data-p="projects">Наши проекты</a><a href="#editor" data-p="editor">Редактор</a><a href="#timemachine" data-p="timemachine">Машина времени</a><a href="#order" data-p="order">Заказать</a>
+<button class="ib" id="th" title="Сменить палитру">🎨</button><button class="ib" id="cl">▲ Свернуть</button></nav>
+<button id="op">☰ Меню ▼</button>
+<main>
+<section class="pg" id="home"><div class="hero">
+<span class="sub" style="margin:0">Студия веб-разработки</span>
+<h1>Сайты, на которые <span class="gt">хочется смотреть</span></h1>
+<p>Xcortex делает быстрые, красивые и живые сайты — от визитки за 1000 ₽ до сложного проекта под ключ.</p>
+<div class="row"><a class="btn" href="#order">Заказать сайт</a><a class="btn" href="#timemachine">Машина времени</a></div></div>
+<div class="stats"><div class="card"><b class="gt" data-n="150">0</b>сайтов запущено</div><div class="card"><b class="gt" data-n="99">0</b>% довольных клиентов</div><div class="card"><b class="gt" data-n="3">0</b>дня на старт проекта</div><div class="card"><b class="gt" data-n="24">0</b>/7 на связи</div></div>
+<div class="mx"><div><div class="av"><svg viewBox="0 0 100 100" role="img" aria-label="MAX"><defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2d8cff"/><stop offset="1" stop-color="#8a3ffc"/></linearGradient></defs><rect width="100" height="100" rx="26" fill="url(#mg)"/><text x="50" y="62" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif" font-weight="800" font-size="30" fill="#fff">MAX</text></svg></div>
+<h3 class="gt">Мы в мессенджере MAX</h3><p>Присоединяйтесь к нашему сообществу: быстрая связь, ответы на вопросы и новости Xcortex.</p>
+<a class="btn" href="https://max.ru/join/R0g8d4cu2PjLO9iwyfrRaeOZxJmcnZb8B1XV-3D7Jh0" target="_blank" rel="noopener">Вступить в MAX</a></div></div></section>
+
+<section class="pg" id="services"><h2 class="gt">Услуги и тарифы</h2><p class="sub">Выберите тариф — и мы начнём работу. Цены фиксированные, без скрытых доплат.</p><div class="grid" id="pr"></div></section>
+
+<section class="pg" id="about"><h2 class="gt">О нас</h2><p class="sub">Xcortex — команда, которая хорошо создаёт сайты. Мы любим чистый код, смелый дизайн и анимации, которые работают на результат. Каждый проект делаем так, будто он наш собственный.</p>
+<div class="grid"><div class="card"><span class="ic">🎨</span><h3>Дизайн</h3>Яркие, продуманные интерфейсы, которые запоминаются с первого взгляда.</div><div class="card"><span class="ic" style="animation-delay:-.7s">⚡</span><h3>Скорость</h3>Лёгкий код и быстрая загрузка — сайт открывается мгновенно на любом устройстве.</div><div class="card"><span class="ic" style="animation-delay:-1.4s">✨</span><h3>Анимации</h3>Плавные эффекты, которые оживляют сайт и удерживают внимание посетителей.</div><div class="card"><span class="ic" style="animation-delay:-2.1s">🛟</span><h3>Поддержка</h3>Отвечаем быстро, вносим правки и помогаем после запуска.</div></div></section>
+
+<section class="pg" id="projects"><h2 class="gt">Наши проекты</h2><p class="sub">Проекты, которые мы уже сделали. Нажмите «Перейти», чтобы открыть проект в новой вкладке.</p><div class="grid" id="pj"></div><div class="more gt">Ещё много всего…</div></section>
+
+<section class="pg" id="editor"><h2 class="gt">Live-редактор кода</h2><p class="sub">Выберите шаблон и правьте HTML/CSS — результат обновляется сразу.</p>
+<div class="row" id="tp"></div>
+<div class="row" style="margin-top:12px"><button class="chip on" data-w="100%">Десктоп</button><button class="chip" data-w="768px">Планшет</button><button class="chip" data-w="375px">Смартфон</button><button class="chip" id="cc">Копировать код</button><button class="chip" id="dc">Скачать .html</button></div>
+<div class="ed"><textarea id="code" spellcheck="false" aria-label="Редактор HTML"></textarea><div class="pv"><iframe id="fr" title="Результат" sandbox="allow-scripts"></iframe></div></div>
+<div class="row" style="margin-top:18px"><button class="btn" id="use">Заказать этот шаблон</button></div></section>
+
+<section class="pg" id="timemachine"><h2 class="gt">Машина времени</h2><p class="sub">Двигайте ползунок от 2000 до 3000 года: чем дальше в будущее, тем красивее и современнее становится сайт в окне ниже.</p>
+<div class="card tm"><div class="yr gt" id="yr">2026</div><div class="era" id="en"></div>
+<input class="range" id="ys" type="range" min="2000" max="3000" step="1" value="2026" aria-label="Год">
+<div class="tick"><span>2000</span><span>2250</span><span>2500</span><span>2750</span><span>3000</span></div>
+<iframe id="tmf" title="Сайт из выбранного года" sandbox></iframe>
+<div class="row" style="margin-top:16px"><button class="chip" id="ym">− 10 лет</button><button class="chip" id="yp">+ 10 лет</button><button class="btn" id="yo">Заказать сайт в стиле этого года</button></div></div></section>
+
+<section class="pg" id="order"><h2 class="gt">Анкета заказа</h2><p class="sub">Заполните анкету — по кнопке откроется ваша почта с готовым письмом.</p>
+<form id="f"><div class="two"><label>Ваше имя<input name="n" required placeholder="Иван"></label><label>Email<input name="e" type="email" required placeholder="you@mail.ru"></label></div>
+<div class="two"><label>Телефон или Telegram<input name="p" placeholder="+7… / @username"></label><label>Тариф<select name="t" id="ts"></select></label></div>
+<div class="two"><label>Шаблон за основу<select name="s" id="ss"></select></label><label>Желаемый срок<input name="d" placeholder="Например, 2 недели"></label></div>
+<label>Тип сайта<select name="k"><option>Лендинг</option><option>Визитка</option><option>Портфолио</option><option>Интернет-магазин</option><option>Другое</option></select></label>
+<label>О проекте и пожелания<textarea name="m" rows="4" placeholder="Расскажите, что нужно сделать, какие цвета и функции хотите"></textarea></label>
+<div class="row"><button class="btn" type="submit">Заказать</button><span id="ok">Открываем почтовый клиент…</span></div></form></section>
+</main>
+<footer>© 2026 Xcortex · Artem.ovsyankin33@gmail.com</footer>
+
+<script>
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const fmt=n=>n.toLocaleString("ru-RU")+" ₽";
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- данные ---------- */
+const TR=[{n:"Базовый",p:1000,l:["Одностраничный сайт","Адаптивная вёрстка","1 правка","Срок до 3 дней"]},
+{n:"Премиум",p:10000,hit:1,l:["До 5 страниц","Анимации и эффекты","Форма заявок","SEO-основа","3 правки","Срок до 7 дней"]},
+{n:"Альфа",p:25000,l:["Сайт под ключ","Уникальный дизайн","Сложные анимации и интеграции","Безлимитные правки","Поддержка 30 дней","Приоритетная работа"]}];
+const PJ=[["Xsocial","https://artem-2436.github.io/Xsocial","💬","Лёгкий мессенджер для общения. Версия v1.1.1."],["Xforum","https://artem-2436.github.io/Xforum/","🗂️","Форум для ИТ-разработчиков любого возраста."],["Xme","https://artem-2436.github.io/Xme/","🙋","Платформа для анонимных вопросов. Составьте тест — другие его пройдут."],["XcortexWIKI","https://artem-2436.github.io/XcortexWIKI/","📚","Аналог Википедии."],["CreateWeb","https://artem-2436.github.io/createWeb/","🛠️","Платформа для заказов сайтов от Xcortex."]];
+const TP={"Лендинг":`<style>body{margin:0;font-family:sans-serif;background:#0f172a;color:#fff;text-align:center;padding:50px 20px}h1{font-size:42px;background:linear-gradient(90deg,#f0f,#0ff);-webkit-background-clip:text;background-clip:text;color:transparent}button{padding:12px 30px;border:0;border-radius:30px;background:#7c3aed;color:#fff;font-size:16px;cursor:pointer;transition:.3s}button:hover{transform:scale(1.12)}</style><h1>Ваш бренд</h1><p>Быстрый и яркий лендинг</p><button>Начать</button>`,
+"Портфолио":`<style>body{margin:0;font-family:sans-serif;background:#111;color:#fff;padding:30px}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.g div{height:110px;border-radius:14px;display:flex;align-items:center;justify-content:center;transition:.4s}.g div:hover{transform:rotate(-4deg) scale(1.1)}</style><h2>Мои работы</h2><div class="g"><div style="background:#f43f5e">Проект 1</div><div style="background:#06b6d4">Проект 2</div><div style="background:#8b5cf6">Проект 3</div></div>`,
+"Визитка":`<style>body{margin:0;display:grid;place-items:center;height:100vh;background:linear-gradient(135deg,#f093fb,#f5576c);font-family:sans-serif}.c{background:#fff;padding:34px;border-radius:24px;text-align:center;box-shadow:0 20px 50px #0004}.a{width:80px;height:80px;margin:0 auto 12px;border-radius:50%;background:conic-gradient(#f43f5e,#06b6d4,#8b5cf6,#f43f5e);animation:r 4s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style><div class="c"><div class="a"></div><h2>Имя Фамилия</h2><p>Веб-дизайнер</p></div>`,
+"Магазин":`<style>body{margin:0;font-family:sans-serif;background:#f4f4f8;padding:24px}.g{display:flex;gap:14px}.p{flex:1;background:#fff;border-radius:16px;padding:16px;text-align:center;transition:.3s}.p:hover{transform:translateY(-8px);box-shadow:0 14px 30px #0002}.p i{display:block;height:80px;border-radius:12px;background:linear-gradient(45deg,#06b6d4,#8b5cf6);margin-bottom:10px}b{color:#7c3aed}</style><h2>Магазин</h2><div class="g"><div class="p"><i></i>Товар 1<br><b>990 ₽</b></div><div class="p"><i></i>Товар 2<br><b>1 490 ₽</b></div><div class="p"><i></i>Товар 3<br><b>2 990 ₽</b></div></div>`,
+"Кликер":`<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#101322;color:#fff;font:18px system-ui;text-align:center}button{width:150px;height:150px;border:0;border-radius:50%;background:linear-gradient(135deg,#a855f7,#06b6d4);color:#fff;font-size:22px;font-weight:bold;cursor:pointer;transition:.1s}button:active{transform:scale(.92)}</style><div><h1>⚡ CLICK LAB</h1><button id="h">+1</button><p>Счёт: <b id="s">0</b></p></div><script>var n=0;h.onclick=function(){s.textContent=++n}<\/script>`};
+const doc=h=>'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'+h+'</body></html>';
+
+/* ---------- тарифы, проекты, список шаблонов ---------- */
+$("#pr").innerHTML=TR.map((t,i)=>`<div class="card ${t.hit?"feat":""}">${t.hit?'<span class="tag">Хит</span>':""}<h3>${t.n}</h3><div class="pr gt">${fmt(t.p)}</div><ul>${t.l.map(x=>"<li>"+x+"</li>").join("")}</ul><a class="btn" href="#order" data-t="${i}">Выбрать</a></div>`).join("");
+$("#ts").innerHTML=TR.map(t=>`<option>${t.n} — ${fmt(t.p)}</option>`).join("");
+$("#ss").innerHTML="<option>Без шаблона</option>"+Object.keys(TP).map(k=>"<option>"+k+"</option>").join("");
+$$("[data-t]").forEach(a=>a.addEventListener("click",()=>{$("#ts").selectedIndex=+a.dataset.t}));
+$("#pj").innerHTML=PJ.map((p,i)=>`<div class="card"><span class="ic" style="animation-delay:-${i*.6}s">${p[2]}</span><h3>${p[0]}</h3><p style="color:#bbc">${p[3]}</p><a class="btn" style="margin-top:16px" href="${p[1]}" target="_blank" rel="noopener">Перейти</a></div>`).join("");
+
+/* ---------- роутер вкладок ---------- */
+function go(p){if(!$("#"+p)||!$("#"+p).classList.contains("pg"))p="home";$$(".pg").forEach(e=>e.classList.toggle("on",e.id===p));$$("nav a").forEach(a=>a.classList.toggle("act",a.dataset.p===p));scrollTo(0,0);if(p==="home")count();if(p==="timemachine")setYear(+$("#ys").value)}
+addEventListener("hashchange",()=>go(location.hash.slice(1)));
+function count(){$$("[data-n]").forEach(el=>{const e=+el.dataset.n,s=performance.now();(function f(t){const k=Math.min(1,(t-s)/1500);el.textContent=Math.round(e*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(f)})(s)})}
+
+/* ---------- меню: изначально закрыто ---------- */
+const menu=open=>{$("#nav").classList.toggle("hide",!open);document.body.classList.toggle("nh",!open)};
+$("#op").addEventListener("click",()=>menu(true));
+$("#cl").addEventListener("click",()=>menu(false));
+$$("nav a").forEach(a=>a.addEventListener("click",()=>{if(innerWidth<700)menu(false)}));
+$("#th").addEventListener("click",()=>document.body.classList.toggle("mono"));
+
+/* ---------- редактор ---------- */
+const code=$("#code"),fr=$("#fr");let cur="Лендинг",tmr=0;
+$("#tp").innerHTML=Object.keys(TP).map(k=>`<button class="chip" data-k="${esc(k)}">${esc(k)}</button>`).join("");
+function load(k){cur=k;code.value=TP[k];fr.srcdoc=doc(TP[k]);$$("#tp .chip").forEach(c=>c.classList.toggle("on",c.dataset.k===k))}
+$$("#tp .chip").forEach(c=>c.addEventListener("click",()=>load(c.dataset.k)));
+code.addEventListener("input",()=>{clearTimeout(tmr);tmr=setTimeout(()=>{fr.srcdoc=doc(code.value)},150)});
+$$("[data-w]").forEach(b=>b.addEventListener("click",()=>{$$("[data-w]").forEach(x=>x.classList.toggle("on",x===b));fr.style.width=b.dataset.w}));
+$("#cc").addEventListener("click",async()=>{const b=$("#cc");try{await navigator.clipboard.writeText(code.value)}catch{code.select();document.execCommand("copy")}b.textContent="Скопировано ✓";setTimeout(()=>b.textContent="Копировать код",1600)});
+$("#dc").addEventListener("click",()=>{const u=URL.createObjectURL(new Blob([doc(code.value)],{type:"text/html"})),a=document.createElement("a");a.href=u;a.download="xcortex-template.html";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)});
+$("#use").addEventListener("click",()=>{$("#ss").value=cur;location.hash="order"});
+load(cur);
+
+/* ---------- машина времени ---------- */
+const BASE="*{box-sizing:border-box;margin:0}body{min-height:100vh}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media(max-width:520px){.g{grid-template-columns:1fr}}";
+const ERAS=[
+[2006,"Ранний веб","Добро пожаловать на наш сайт!","Лучше всего виден в Internet Explorer 6",
+`body{background:#c0c0c0;font:14px "Times New Roman",serif;padding:8px}header{background:#000080;color:#ff0;padding:6px;display:flex;justify-content:space-between}nav span{margin-left:12px;text-decoration:underline}h1{color:#00f;font-size:28px;margin:16px 0 6px}p{margin-bottom:12px}button{border:2px outset #fff;background:#c0c0c0;padding:4px 16px;font:inherit;margin-bottom:14px}.g div{border:2px inset #fff;background:#fff;padding:10px}footer{margin-top:14px;font-size:11px}`],
+[2012,"Web 2.0","Наш новый сайт","Глянцевые кнопки, градиенты и тени",
+`body{background:linear-gradient(#dfeaf7,#fff 300px);font:14px Verdana,sans-serif;color:#234;padding:14px}header{background:linear-gradient(#6aa9ec,#1d6bc4);color:#fff;padding:12px 16px;border-radius:8px;display:flex;justify-content:space-between;box-shadow:0 2px 6px #0004}nav span{margin-left:14px}h1{margin:22px 0 8px;text-shadow:1px 1px #fff}p{margin-bottom:14px}button{border:1px solid #145;border-radius:6px;background:linear-gradient(#8fd0ff,#1b6fc9 55%,#0f4f9a);color:#fff;padding:10px 22px;font:bold 14px Verdana;box-shadow:inset 0 1px #fff8,0 3px 5px #0003;margin-bottom:18px}.g div{background:linear-gradient(#fff,#e9f1fb);border:1px solid #b9cde6;border-radius:8px;padding:14px;box-shadow:0 2px 5px #0002}footer{margin-top:16px;font-size:11px}`],
+[2018,"Flat Design","Меньше деталей. Больше смысла.","Плоские цвета и чёткая типографика",
+`body{background:#fff;font:15px Helvetica,Arial,sans-serif;color:#263238}header{background:#2196f3;color:#fff;padding:16px 22px;display:flex;justify-content:space-between;font-weight:700}nav span{margin-left:18px}main{padding:26px 22px}h1{font-size:34px;margin-bottom:8px}p{margin-bottom:18px;color:#607d8b}button{border:0;background:#ff5722;color:#fff;padding:12px 26px;font:700 14px Helvetica;margin-bottom:22px}.g div{padding:20px;color:#fff;font-weight:700}.g div:nth-child(1){background:#4caf50}.g div:nth-child(2){background:#ff9800}.g div:nth-child(3){background:#9c27b0}footer{padding:0 22px 18px;color:#90a4ae;font-size:12px}`],
+[2026,"Современный минимализм","Пространство для главного.","Мягкие тени, большие радиусы, воздух",
+`body{background:#f6f7fb;font:16px/1.6 system-ui,sans-serif;color:#1c2033}header{display:flex;justify-content:space-between;padding:20px 34px}nav span{margin-left:22px;color:#667}main{padding:20px 34px}h1{font-size:clamp(32px,6vw,54px);letter-spacing:-.04em;line-height:1.05;margin-bottom:12px}p{color:#667;max-width:460px;margin-bottom:22px}button{border:0;background:#4f46e5;color:#fff;padding:14px 28px;border-radius:40px;font:600 15px system-ui;box-shadow:0 12px 30px -8px #4f46e5aa;margin-bottom:28px;transition:.3s}button:hover{transform:translateY(-3px)}.g div{background:#fff;border-radius:24px;padding:24px;box-shadow:0 14px 40px #1c20330f}footer{padding:10px 34px 24px;color:#99a;font-size:13px}`],
+[2100,"Стекло и аврора","Интерфейсы, которые чувствуют вас.","Матовое стекло, живой градиент, плавность",
+`body{background:linear-gradient(120deg,#1b1147,#0b3a63,#3a0f5c,#1b1147);background-size:300% 300%;animation:bg 14s ease infinite;color:#fff;font:16px/1.6 system-ui,sans-serif}@keyframes bg{50%{background-position:100% 50%}}header{display:flex;justify-content:space-between;padding:18px 30px;backdrop-filter:blur(14px);background:#ffffff14;border-bottom:1px solid #ffffff22}nav span{margin-left:22px;opacity:.8}main{padding:30px}h1{font-size:clamp(34px,6vw,60px);line-height:1.05;margin-bottom:12px;background:linear-gradient(90deg,#8ff,#f9f,#ff9);-webkit-background-clip:text;background-clip:text;color:transparent}p{opacity:.8;max-width:480px;margin-bottom:24px}button{border:1px solid #fff5;background:#ffffff22;backdrop-filter:blur(10px);color:#fff;padding:14px 30px;border-radius:40px;font:600 15px system-ui;margin-bottom:28px;box-shadow:0 0 30px #8ff4;transition:.3s}button:hover{background:#ffffff40}.g div{background:#ffffff18;border:1px solid #ffffff2e;backdrop-filter:blur(18px);border-radius:24px;padding:24px;box-shadow:0 20px 50px #0005}footer{padding:0 30px 24px;opacity:.6;font-size:13px}`],
+[2400,"Голографический HUD","Данные становятся пространством.","Сканирующий слой, сетка и телеметрия",
+`body{background:#020b14;color:#bff;font:14px/1.6 "Courier New",monospace;background-image:linear-gradient(#1ceaff14 1px,transparent 1px),linear-gradient(90deg,#1ceaff14 1px,transparent 1px);background-size:28px 28px;animation:gm 10s linear infinite}@keyframes gm{to{background-position:28px 28px}}body:after{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(transparent 48%,#43f5ff22 50%,transparent 52%);background-size:100% 10px;animation:sc 4s linear infinite}@keyframes sc{to{background-position:0 100%}}header{display:flex;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #39efff;box-shadow:0 0 24px #00d9ff44;color:#4af5ff}nav span{margin-left:18px}main{padding:26px 24px}h1{font-size:clamp(28px,5vw,52px);color:#8ffaff;text-shadow:0 0 22px #00d9ff;margin-bottom:10px;text-transform:uppercase}p{max-width:480px;margin-bottom:22px}button{background:transparent;border:1px solid #39efff;color:#8ffaff;padding:12px 26px;font:inherit;letter-spacing:.15em;margin-bottom:26px;box-shadow:0 0 18px #00d9ff55,inset 0 0 14px #00d9ff22;animation:pl 2s infinite}@keyframes pl{50%{box-shadow:0 0 34px #00d9ffaa,inset 0 0 20px #00d9ff44}}.g div{border:1px solid #39efff;padding:18px;background:#073746aa;box-shadow:inset 0 0 30px #00d9ff22}footer{padding:0 24px 20px;color:#4af5ff99;font-size:12px}`],
+[2800,"Нейро-космос","Подумайте. Мы уже здесь.","Биолюминесценция и интерфейс, который реагирует на мысль",
+`body{background:radial-gradient(ellipse at 50% 110%,#4b1f8a,#060b1c 65%);color:#ece9ff;font:16px/1.6 system-ui,sans-serif;overflow-x:hidden}body:before{content:"";position:fixed;width:340px;height:340px;right:-60px;top:70px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff,#a7ffe9 8%,#7c3aed 40%,#10152c 72%);box-shadow:0 0 90px #70ffe9aa;animation:nf 6s ease-in-out infinite}@keyframes nf{50%{transform:translateY(-26px) rotate(12deg) scale(1.06)}}header{position:relative;display:flex;justify-content:space-between;padding:20px 32px;color:#76ffe3}nav span{margin-left:22px}main{position:relative;padding:20px 32px}h1{font-size:clamp(34px,6vw,64px);line-height:1.03;margin-bottom:12px;background:linear-gradient(90deg,#76ffe3,#c4a5ff);-webkit-background-clip:text;background-clip:text;color:transparent}p{max-width:440px;opacity:.8;margin-bottom:24px}button{border:0;background:linear-gradient(90deg,#6d3bea,#38e7c7);color:#fff;padding:15px 32px;border-radius:40px;font:700 15px system-ui;box-shadow:0 0 34px #38e7c788;margin-bottom:30px}.g div{background:#ffffff0f;border:1px solid #9a72ff66;border-radius:34px;padding:26px;backdrop-filter:blur(14px);box-shadow:0 0 40px #a855f733;animation:nf 7s ease-in-out infinite}.g div:nth-child(2){animation-delay:-2s}.g div:nth-child(3){animation-delay:-4s}footer{position:relative;padding:0 32px 22px;opacity:.6;font-size:13px}`],
+[3001,"Трансцендентность","Свет, ставший смыслом.","Звёздное поле, вращающиеся кольца и золотое сияние",
+`body{background:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1.5px 1.5px at 70% 20%,#ffe9a8,transparent),radial-gradient(1px 1px at 40% 80%,#fff,transparent),radial-gradient(2px 2px at 85% 65%,#cfe,transparent),radial-gradient(ellipse at 50% 40%,#1c1440,#02020a 70%);color:#fff7e0;font:16px/1.6 Georgia,serif}body:before{content:"";position:fixed;left:50%;top:44%;width:520px;height:520px;margin:-260px;border-radius:50%;border:2px solid #ffd76a55;box-shadow:0 0 80px #ffd76a44,inset 0 0 80px #ffd76a22;animation:rg 24s linear infinite}body:after{content:"";position:fixed;left:50%;top:44%;width:380px;height:380px;margin:-190px;border-radius:50%;border:2px dashed #9ff4ff77;animation:rg 16s linear infinite reverse}@keyframes rg{to{transform:rotate(360deg)}}header{position:relative;z-index:1;display:flex;justify-content:space-between;padding:22px 34px;letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:#ffd76a}nav span{margin-left:24px}main{position:relative;z-index:1;padding:20px 34px;text-align:center}h1{font-size:clamp(36px,7vw,72px);font-weight:400;line-height:1.05;margin:26px 0 12px;background:linear-gradient(90deg,#fff,#ffd76a,#9ff4ff,#fff);background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:fw 8s linear infinite}@keyframes fw{to{background-position:300% 0}}p{max-width:460px;margin:0 auto 24px;opacity:.85}button{border:1px solid #ffd76a;background:#ffd76a1a;color:#ffe9a8;padding:14px 34px;border-radius:40px;font:inherit;letter-spacing:.12em;box-shadow:0 0 40px #ffd76a66;margin-bottom:34px}.g{text-align:left}.g div{background:#ffffff0c;border:1px solid #ffd76a55;border-radius:50px 50px 18px 18px;padding:24px;backdrop-filter:blur(10px);box-shadow:0 0 50px #9ff4ff22}footer{position:relative;z-index:1;text-align:center;padding:0 0 24px;color:#ffd76a99;font-size:12px;letter-spacing:.2em}`]];
+function tmDoc(y){const i=ERAS.findIndex(e=>y<e[0]),k=i<0?ERAS.length-1:i,e=ERAS[k],hue=k>=4?"html{filter:hue-rotate("+((y*3)%50)+"deg)}":"";
+return'<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+BASE+e[4]+hue+'</style></head><body><header><b>Xcortex</b><nav><span>О нас</span><span>Услуги</span><span>Контакты</span></nav></header><main><h1>'+e[2]+'</h1><p>'+e[3]+' · '+y+' год</p><button>Заказать сайт</button><div class="g"><div><b>Дизайн</b><br>Образ эпохи '+y+'</div><div><b>Скорость</b><br>Мгновенный отклик</div><div><b>Поддержка</b><br>Всегда на связи</div></div></main><footer>© '+y+' Xcortex'+(k===0?' · Вы посетитель № 000'+(100+y%900):'')+'</footer></body></html>'}
+const ys=$("#ys"),tmf=$("#tmf");let ty=0,last=0;
+function setYear(y){y=Math.max(2000,Math.min(3000,+y||2026));ys.value=y;$("#yr").textContent=y;const i=ERAS.findIndex(e=>y<e[0]);$("#en").textContent=ERAS[i<0?ERAS.length-1:i][1];clearTimeout(ty);ty=setTimeout(()=>{tmf.srcdoc=tmDoc(y)},40)}
+ys.addEventListener("input",()=>setYear(ys.value));
+$("#ym").addEventListener("click",()=>setYear(+ys.value-10));
+$("#yp").addEventListener("click",()=>setYear(+ys.value+10));
+$("#yo").addEventListener("click",()=>{const i=ERAS.findIndex(e=>+ys.value<e[0]),e=ERAS[i<0?ERAS.length-1:i],m=$("#f").elements.m;m.value=(m.value+"\n\nЖелаемая стилистика: сайт в эстетике "+ys.value+" года ("+e[1]+").").trim();location.hash="order"});
+
+/* ---------- анкета (mailto) ---------- */
+$("#f").addEventListener("submit",e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
+const body=["Имя: "+d.n,"Email: "+d.e,"Контакт: "+(d.p||"—"),"Тариф: "+d.t,"Шаблон: "+d.s,"Тип сайта: "+d.k,"Срок: "+(d.d||"—"),"","О проекте:",d.m||"—"].join("\n");
+$("#ok").style.display="inline";
+location.href="mailto:Artem.ovsyankin33@gmail.com?subject="+encodeURIComponent("Заказ сайта — "+d.t)+"&body="+encodeURIComponent(body)});
+
+/* ---------- загрузочный экран 4 секунды ---------- */
+let n=0;const iv=setInterval(()=>{n++;$("#pc").textContent=Math.min(100,n*2.5)+"%"},100);
+setTimeout(()=>{clearInterval(iv);$("#ld").classList.add("out");document.body.classList.add("ready");setTimeout(()=>$("#ld").remove(),800);go(location.hash.slice(1)||"home")},4000);
+go(location.hash.slice(1)||"home");
+
+/* ---------- фон-частицы ---------- */
+const cv=$("#cv"),x=cv.getContext("2d"),P=[];let W,H;
+function rs(){W=cv.width=innerWidth;H=cv.height=innerHeight}rs();addEventListener("resize",rs);
+for(let i=0;i<55;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:Math.random()-.5,vy:Math.random()-.5});
+(function dr(){x.clearRect(0,0,W,H);x.fillStyle=x.strokeStyle="#fff";P.forEach((p,i)=>{p.x=(p.x+p.vx+W)%W;p.y=(p.y+p.vy+H)%H;x.globalAlpha=.6;x.fillRect(p.x,p.y,2,2);for(let j=i+1;j<P.length;j++){const q=P[j],ds=Math.hypot(p.x-q.x,p.y-q.y);if(ds<120){x.globalAlpha=.25*(1-ds/120);x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}});requestAnimationFrame(dr)})();
+})();
+</script>
+</body></html>
